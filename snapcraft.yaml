@@ -1,6 +1,7 @@
 name: prometheus-ovn-exporter
 version: 1.0.3
-base: core20
+base: core18
+grade: stable
 summary: Prometheus OVN Exporter
 description: |
   Exporter that exposes information gathered from OVN for use by the Prometheus monitoring system
@@ -64,4 +65,39 @@ apps:
     plugs:
       - network-bind
       - openvswitch
+      - log-observe
+      - system-observe
+      - network-observe
+      - netlink-audit
+      - kernel-module-observe
     daemon: simple
+plugs:
+  system-files:
+    interface: system-files
+    read:
+      - /etc/openvswitch/system-id.conf
+      - /var/run/ovn/ovnnb_db.ctl
+      - /var/run/ovn/ovnnb_db.sock
+      - /var/run/ovn/ovnsb_db.ctl
+      - /var/run/ovn/ovnsb_db.sock
+      - /var/run/openvswitch/ovsdb-server
+      - /run/openvswitch/ovsdb-server
+      - /run/ovn/ovn-northd.pid
+      - /run/ovn/ovnsb_db.pid
+      - /run/ovn/ovnsb_db.ctl
+      - /run/ovn/ovnsb_db.sock
+      - /run/ovn/ovnnb_db.pid
+      - /run/ovn/ovnnb_db.ctl
+      - /run/ovn/ovnnb_db.sock
+      - /run/openvswitch/ovsdb-server.14232.ctl # PID changes, need wildcard
+    write:
+      - /var/run/ovn/ovnnb_db.ctl
+      - /run/ovn/ovnnb_db.ctl
+      - /var/run/ovn/ovnnb_db.sock
+      - /run/ovn/ovnnb_db.sock
+      - /var/run/ovn/ovnsb_db.ctl
+      - /run/ovn/ovnsb_db.ctl
+      - /var/run/ovn/ovnsb_db.sock
+      - /run/ovn/ovnsb_db.sock
+      - /run/openvswitch/ovsdb-server.14232.ctl # PID changes, need wildcard
+
