@@ -5,6 +5,8 @@ summary: Prometheus OVN Exporter
 description: |
   Exporter that exposes information gathered from OVN for use by the Prometheus monitoring system
 confinement: strict
+architectures:
+  - build-on: arm64
 parts:
   ovn-exporter:
     plugin: go
@@ -59,5 +61,7 @@ parts:
 apps:
   ovn-exporter:
     command: 'bin/ovn-exporter.wrapper'
-    plugs: [network-bind]
+    plugs:
+      - network-bind
+      - openvswitch
     daemon: simple
