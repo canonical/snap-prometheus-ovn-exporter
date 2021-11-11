@@ -1,0 +1,12 @@
+ARGS=-database.northbound.file.data.path /var/lib/ovn/ovnnb_db.db \
+-database.northbound.file.log.path /var/log/ovn/ovsdb-server-nb.log \
+-database.northbound.file.pid.path /var/run/ovn/ovnnb_db.pid \
+-database.northbound.socket.control unix:/var/run/ovn/ovnnb_db.ctl \
+-database.northbound.socket.remote unix:/var/run/ovn/ovnnb_db.sock \
+-database.southbound.file.data.path /var/lib/ovn/ovnsb_db.db \
+-database.southbound.file.log.path /var/log/ovn/ovsdb-server-sb.log \
+-database.southbound.file.pid.path /var/run/ovn/ovnsb_db.pid \
+-database.southbound.socket.control unix:/var/run/ovn/ovnsb_db.ctl \
+-database.southbound.socket.remote unix:/var/run/ovn/ovnsb_db.sock \
+-service.ovn.northd.file.log.path /var/log/ovn/ovn-northd.log \
+-service.ovn.northd.file.pid.path /var/run/ovn/ovn-northd.pid

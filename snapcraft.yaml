@@ -1,0 +1,63 @@
+name: prometheus-ovn-exporter
+version: 1.0.3
+base: core20
+summary: Prometheus OVN Exporter
+description: |
+  Exporter that exposes information gathered from OVN for use by the Prometheus monitoring system
+confinement: strict
+parts:
+  ovn-exporter:
+    plugin: go
+    go-channel: 1.14/stable
+    source: https://github.com/greenpau/ovn_exporter.git
+    source-tag: v1.0.3
+    build-packages:
+      - gcc
+      - golang-go
+    override-build: |
+      GIT_COMMIT=$(git describe --dirty --always)
+      GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD -- | head -1)
+      BUILD_USER=snapcraft
+      BUILD_DATE=$(date +"%Y-%m-%d")
+      BINARY=ovn-exporter
+      VERBOSE=-v
+      PROJECT=github.com/greenpau/ovn_exporter
+      PKG_DIR=pkg/ovn_exporter
+      mkdir -p bin/
+      rm -rf ./bin/*
+      CGO_ENABLED=0 go build -o ./bin/${BINARY} \
+      -ldflags="-w -s \
+      -X github.com/prometheus/common/version.Version=$SNAPCRAFT_PROJECT_VERSION \
+      -X github.com/prometheus/common/version.Revision=$GIT_COMMIT \
+      -X github.com/prometheus/common/version.Branch=$GIT_BRANCH \
+      -X github.com/prometheus/common/version.BuildUser=$BUILD_USER \
+      -X github.com/prometheus/common/version.BuildDate=$BUILD_DATE \
+      -X ${PROJECT}/${PKG_DIR}.appName=$BINARY \
+      -X ${PROJECT}/${PKG_DIR}.appVersion=$SNAPCRAFT_PROJECT_VERSION \
+      -X ${PROJECT}/${PKG_DIR}.gitBranch=$GIT_BRANCH \
+      -X ${PROJECT}/${PKG_DIR}.gitCommit=$GIT_COMMIT \
+      -X ${PROJECT}/${PKG_DIR}.buildUser=$BUILD_USER \
+      -X ${PROJECT}/${PKG_DIR}.buildDate=$BUILD_DATE" \
+      -gcflags="all=-trimpath=../src" \
+      -asmflags="all=-trimpath ../src" \
+      ./cmd/ovn_exporter/*.go
+    override-prime: |
+      snapcraftctl prime
+      install -D $SNAPCRAFT_PART_SRC/../build/bin/ovn-exporter bin/ovn-exporter
+
+  ovn-exporter-config:
+    plugin: dump
+    source: .
+    organize:
+      daemon_arguments: etc/ovn-exporter/daemon_arguments.example
+      ovn-exporter-wrapper: bin/ovn-exporter.wrapper
+    prime:
+      - etc/ovn-exporter/daemon_arguments.example
+      - bin/ovn-exporter.wrapper
+      - lib/*
+      - usr/lib/*
+apps:
+  ovn-exporter:
+    command: 'bin/ovn-exporter.wrapper'
+    plugs: [network-bind]
+    daemon: simple
