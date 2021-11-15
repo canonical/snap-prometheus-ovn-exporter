@@ -48,17 +48,12 @@ parts:
       snapcraftctl prime
       install -D $SNAPCRAFT_PART_SRC/../build/bin/ovn-exporter bin/ovn-exporter
 
-  ovn-exporter-config:
+  scripts:
     plugin: dump
-    source: .
+    source: src
     organize:
-      daemon_arguments: etc/ovn-exporter/daemon_arguments.example
       ovn-exporter-wrapper: bin/ovn-exporter.wrapper
-    prime:
-      - etc/ovn-exporter/daemon_arguments.example
-      - bin/ovn-exporter.wrapper
-      - lib/*
-      - usr/lib/*
+      hooks/configure: meta/hooks/configure
 apps:
   ovn-exporter:
     command: 'bin/ovn-exporter.wrapper'
@@ -101,3 +96,6 @@ plugs:
       - /run/ovn/ovnsb_db.sock
       - /run/openvswitch/ovsdb-server.14232.ctl # PID changes, need wildcard
 
+hooks:
+  configure:
+    plugs: [network, network-bind]

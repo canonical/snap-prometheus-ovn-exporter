@@ -1,8 +1,0 @@
-#!/bin/sh
-
-# Setup initial config if doesn't exist yet
-test -e $SNAP_DATA/daemon_arguments || cp $SNAP/etc/ovn-exporter/daemon_arguments.example $SNAP_DATA/daemon_arguments
-
-. $SNAP_DATA/daemon_arguments
-echo "* Running $SNAP/bin/ovn-exporter with args: $ARGS"
-$SNAP/bin/ovn-exporter $ARGS
