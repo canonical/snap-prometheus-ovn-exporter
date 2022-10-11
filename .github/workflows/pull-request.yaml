@@ -31,3 +31,6 @@ jobs:
       uses: tim-actions/dco@master
       with:
         commits: ${{ steps.get-pr-commits.outputs.commits }}
+
+  build-and-test:
+    uses: ./.github/workflows/build-and-test.yaml
