@@ -63,22 +63,16 @@ plugs:
   # For Unix sockets read-write permissions are needed even though the
   # requests over those sockets will be read-only (in order to write a
   # request we need write permissions).
-  var-run-openvswitch:
-    interface: system-files
-    write:
-    - /var/run/openvswitch
   run-openvswitch:
     interface: system-files
     write:
     - /run/openvswitch
-  var-run-ovn:
-    interface: system-files
-    write:
-    - /var/run/ovn
+    - /var/run/openvswitch
   run-ovn:
     interface: system-files
     write:
     - /run/ovn
+    - /var/run/ovn
 apps:
   ovn-exporter:
     command: 'bin/ovn-exporter.wrapper'
@@ -91,9 +85,7 @@ apps:
       - netlink-audit
       - kernel-module-observe
       - etc-openvswitch
-      - var-run-openvswitch
       - run-openvswitch
-      - var-run-ovn
       - run-ovn
     daemon: simple
 hooks:
