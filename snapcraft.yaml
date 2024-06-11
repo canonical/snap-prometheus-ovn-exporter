@@ -1,5 +1,5 @@
 name: prometheus-ovn-exporter
-version: 1.0.6
+version: 1.0.7
 base: core20
 grade: stable
 summary: Prometheus OVN Exporter
@@ -18,9 +18,9 @@ architectures:
 parts:
   ovn-exporter:
     plugin: go
-    go-channel: 1.19/stable
+    go-channel: 1.20/stable
     source: https://github.com/greenpau/ovn_exporter.git
-    source-tag: v1.0.6
+    source-tag: v1.0.7
     build-packages:
       - gcc
       - golang-go
